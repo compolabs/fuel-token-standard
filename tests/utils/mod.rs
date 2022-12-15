@@ -1,4 +1,5 @@
 use fuels::prelude::*;
+use fuels::contract::contract::CallResponse;
 
 abigen!(TestToken, "out/debug/token_contract-abi.json");
 
@@ -9,7 +10,7 @@ pub struct WaletsSetup {
 }
 
 pub mod abi_calls {
-    use fuels::contract::call_response::FuelCallResponse;
+
 
     use super::*;
 
@@ -17,7 +18,7 @@ pub mod abi_calls {
         contract: &TestToken,
         mint_amount: u64,
         address: Address,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract
             .methods()
             .initialize(mint_amount, address)
@@ -25,41 +26,41 @@ pub mod abi_calls {
             .await
     }
 
-    pub async fn get_mint_amount(contract: &TestToken) -> Result<FuelCallResponse<u64>, Error> {
+    pub async fn get_mint_amount(contract: &TestToken) -> Result<CallResponse<u64>, Error> {
         contract.methods().get_mint_amount().call().await
     }
-    pub async fn name(contract: &TestToken) -> Result<FuelCallResponse<fuels::core::types::SizedAsciiString<9>>, Error> {
+    pub async fn name(contract: &TestToken) -> Result<CallResponse<fuels::core::types::SizedAsciiString<9>>, Error> {
         contract.methods().name().call().await
     }
-    pub async fn symbol(contract: &TestToken) -> Result<FuelCallResponse<fuels::core::types::SizedAsciiString<4>>, Error> {
+    pub async fn symbol(contract: &TestToken) -> Result<CallResponse<fuels::core::types::SizedAsciiString<4>>, Error> {
         contract.methods().symbol().call().await
     }
-    pub async fn decimals(contract: &TestToken) -> Result<FuelCallResponse<u8>, Error> {
+    pub async fn decimals(contract: &TestToken) -> Result<CallResponse<u8>, Error> {
         contract.methods().decimals().call().await
     }
 
     pub async fn set_mint_amount(
         contract: &TestToken,
         mint_amount: u64,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract.methods().set_mint_amount(mint_amount).call().await
     }
 
     pub async fn mint_coins(
         contract: &TestToken,
         mint_amount: u64,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract.methods().mint_coins(mint_amount).call().await
     }
 
     pub async fn burn_coins(
         contract: &TestToken,
         burn_amount: u64,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract.methods().burn_coins(burn_amount).call().await
     }
 
-    pub async fn get_balance(contract: &TestToken) -> Result<FuelCallResponse<u64>, Error> {
+    pub async fn get_balance(contract: &TestToken) -> Result<CallResponse<u64>, Error> {
         contract.methods().get_balance().call().await
     }
 
@@ -68,7 +69,7 @@ pub mod abi_calls {
         coins: u64,
         asset_id: ContractId,
         address: Address,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract
             .methods()
             .transfer_token_to_output(coins, asset_id, address)
@@ -80,7 +81,7 @@ pub mod abi_calls {
         contract: &TestToken,
         coins: u64,
         address: Address,
-    ) -> Result<FuelCallResponse<()>, Error> {
+    ) -> Result<CallResponse<()>, Error> {
         contract
             .methods()
             .transfer_coins(coins, address)
@@ -88,7 +89,7 @@ pub mod abi_calls {
             .call()
             .await
     }
-    pub async fn mint(contract: &TestToken) -> Result<FuelCallResponse<()>, Error> {
+    pub async fn mint(contract: &TestToken) -> Result<CallResponse<()>, Error> {
         contract
             .methods()
             .mint()
