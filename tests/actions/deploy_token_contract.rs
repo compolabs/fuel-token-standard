@@ -1,7 +1,7 @@
 use dotenv::dotenv;
 use fuels::prelude::*;
 
-const RPC: &str = "http://node-beta-1.fuel.network/graphql";
+const RPC: &str = "node-beta-2.fuel.network";
 
 #[tokio::test]
 async fn deploy_token_contract() {
@@ -21,7 +21,7 @@ async fn deploy_token_contract() {
     let token_contract_id = Contract::deploy(
         "out/debug/token_contract.bin",
         &wallet,
-        TxParameters::default(),
+        TxParameters::new(Some(1), None, None),
         StorageConfiguration::with_storage_path(Some(
             "./out/debug/token_contract-storage_slots.json".to_string(),
         )),
@@ -34,3 +34,5 @@ async fn deploy_token_contract() {
 
     println!("✅ Contract deployed @ {token_contract_id}");
 }
+
+// ✅ Contract deployed @ fuel19nluhjt8zlj6zqkmr4w6ghqcjfydqzs8pnt94q3qj6uhx0fmqu0q70c9j2
