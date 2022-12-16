@@ -149,38 +149,11 @@ pub mod setup_utils {
     }
 }
 
-//=========================== 👇🏻 DRAFTS 👇🏻 ================================
-//========================================================================
-//========================================================================
-//========================================================================
 
-// pub struct Metadata {
-//     pub token: TestToken,
-//     pub wallet_owner: WalletUnlocked,
-//     pub wallet_mint1: WalletUnlocked,
-//     pub wallet_mint2: WalletUnlocked,
-// }
+pub fn parse_units(num: u64, decimals: u8) -> u64 {
+    num * 10u64.pow(decimals as u32)
+}
 
-// pub mod test_helpers {
-//     use super::*;
-
-//     pub async fn setup() -> (Metadata, Vec<WalletUnlocked>) {
-//         let wallets = launch_custom_provider_and_get_wallets(WalletsConfig::default(), None).await;
-
-//         let contract_id = Contract::deploy(
-//             "./out/debug/token_contract.bin",
-//             &wallets[0],
-//             TxParameters::default(),
-//             StorageConfiguration::default(),
-//         )
-//         .await
-//         .unwrap();
-
-//         let user = Metadata {
-//             token: Token::new(contract_id.clone(), wallets[0].clone()),
-//             wallet: wallets[0].clone().lock(),
-//         };
-
-//         (user, wallets)
-//     }
-// }
+pub fn format_units(num: u64, decimals: u8) -> u64 {
+    num / 10u64.pow(decimals as u32)
+}

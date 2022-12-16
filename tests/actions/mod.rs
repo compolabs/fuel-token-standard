@@ -1,4 +1,8 @@
-mod deploy_token_contract;
+mod setup;
+mod deploy;
 mod initialize;
+mod mint;
+mod transfer;
+
 
 
