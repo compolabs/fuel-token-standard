@@ -18,3 +18,4 @@ path = "tests/harness.rs"
 [dependencies]
 # bignumber = "0.0.16"
 dotenv = "0.15.0"
+rand = "0.8.5"
