@@ -27,26 +27,15 @@ async fn transfer() {
     let recipient = Wallet::from_address(recipient, Some(provider.clone()));
 
     let amount = parse_units(10, decimals);
-    let mut inputs = vec![];
-    let mut outputs = vec![];
-
-    let input = wallet
-        .get_asset_inputs_for_amount(asset_id, amount, 0)
+    let _receipts = wallet
+        .transfer(
+            recipient.address(),
+            amount,
+            asset_id,
+            TxParameters::new(Some(1), Some(1000000), None),
+        )
         .await
         .unwrap();
-    inputs.extend(input);
-
-    let output = wallet.get_asset_outputs_for_amount(recipient.address(), asset_id, amount);
-    outputs.extend(output);
-
-    let mut tx = Wallet::build_transfer_tx(
-        &inputs,
-        &outputs,
-        TxParameters::new(Some(1), Some(1000000), None),
-    );
-    wallet.sign_transaction(&mut tx).await.unwrap();
-
-    let _receipts = provider.send_transaction(&tx).await.unwrap();
 
     let recipient_balance = recipient.get_asset_balance(&asset_id).await.unwrap();
     let balance = wallet.get_asset_balance(&asset_id).await.unwrap();
