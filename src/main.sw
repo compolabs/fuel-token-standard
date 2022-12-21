@@ -1,28 +1,25 @@
 contract;
 use std::{
-    auth::{AuthError, msg_sender},
     address::*,
-    revert::require,
-    context::{balance_of},
+    auth::{
+        AuthError,
+        msg_sender,
+    },
+    call_frames::contract_id,
+    context::balance_of,
     contract_id::ContractId,
+    revert::require,
     storage::*,
     token::*,
-    call_frames::contract_id
 };
 
 abi Token {
-    // Name of token
+    // Config of token
     #[storage(read)]
-    fn name() -> str[9];
-    // Symbol of token
-    #[storage(read)]
-    fn symbol() -> str[4];
-    // decimals of token
-    #[storage(read)]
-    fn decimals() -> u8;
+    fn config() -> Config;
     // Initialize contract
     #[storage(read, write)]
-    fn initialize(mint_amount: u64, address: Address);
+    fn initialize(config: Config, mint_amount: u64, address: Address);
     // Set mint amount for each address
     #[storage(read, write)]
     fn set_mint_amount(mint_amount: u64);
@@ -48,16 +45,28 @@ abi Token {
     // Method called from address to mint coins
     #[storage(read, write)]
     fn mint();
+    #[storage(read)]
+    fn already_minted(address: Address) -> bool;
 }
-
 
 const ZERO_B256 = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
+pub struct Config {
+    name: str[32],
+    symbol: str[8],
+    decimals: u8,
+}
+
+
 storage {
-    name: str[9] = "USD Token",
-    symbol: str[4] = "USDT",
-    decimals: u8 = 6,
-    owner: Address = Address { value: ZERO_B256 },
+    config: Config = Config {
+        name: "                                ",
+        symbol: "        ",
+        decimals: 1u8,
+    },
+    owner: Address = Address {
+        value: ZERO_B256,
+    },
     mint_amount: u64 = 0,
     mint_list: StorageMap<Address, bool> = StorageMap {},
 }
@@ -72,9 +81,9 @@ enum Error {
 pub fn get_msg_sender_address_or_panic() -> Address {
     let sender: Result<Identity, AuthError> = msg_sender();
     if let Identity::Address(address) = sender.unwrap() {
-       address
+        address
     } else {
-       revert(0);
+        revert(0);
     }
 }
 
@@ -89,10 +98,11 @@ impl Token for Contract {
     // Owner methods
     //////////////////////////////////////
     #[storage(read, write)]
-    fn initialize(mint_amount: u64,owner: Address) {
+    fn initialize(config: Config, mint_amount: u64, owner: Address) {
         require(storage.owner.into() == ZERO_B256, Error::CannotReinitialize);
         storage.owner = owner;
         storage.mint_amount = mint_amount;
+        storage.config = config;
     }
 
     #[storage(read, write)]
@@ -156,15 +166,12 @@ impl Token for Contract {
         balance_of(asset_id, contract_id())
     }
     #[storage(read)]
-    fn decimals() -> u8 {
-        storage.decimals
+    fn config() -> Config {
+        storage.config
     }
+
     #[storage(read)]
-    fn symbol() -> str[4] {
-        storage.symbol
-    }    
-    #[storage(read)]
-    fn name() -> str[9] {
-        storage.name
+    fn already_minted(address: Address) -> bool{
+        storage.mint_list.get(address)
     }
 }
