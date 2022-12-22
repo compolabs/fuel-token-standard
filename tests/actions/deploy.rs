@@ -48,6 +48,18 @@ async fn deploy() {
             decimals: 8,
             mint_amount: 5,
         },
+        DeployConfig {
+            name: String::from("Uniswap"),
+            symbol: String::from("UNI"),
+            decimals: 9,
+            mint_amount: 1000,
+        },
+        DeployConfig {
+            name: String::from("Chainlink"),
+            symbol: String::from("LINK"),
+            decimals: 9,
+            mint_amount: 1000,
+        },
     ];
 
     for config in configs {
@@ -68,7 +80,7 @@ async fn deploy_token_contract(mut deploy_config: DeployConfig) {
         Err(error) => panic!("❌ Cannot find .env file: {:#?}", error),
     };
 
-     deploy_config
+    deploy_config
         .name
         .push_str(" ".repeat(32 - deploy_config.name.len()).as_str());
     deploy_config
@@ -76,7 +88,7 @@ async fn deploy_token_contract(mut deploy_config: DeployConfig) {
         .push_str(" ".repeat(8 - deploy_config.symbol.len()).as_str());
 
     let wallet = WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider));
-    let mut rng  = rand::thread_rng();
+    let mut rng = rand::thread_rng();
     let salt = rng.gen::<[u8; 32]>();
     let token_contract_id = Contract::deploy_with_parameters(
         "out/debug/token_contract.bin",
