@@ -1,6 +1,8 @@
 use fuels::prelude::*;
 use crate::{actions::setup::setup, utils::{parse_units, format_units}};
 
+// const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
+
 #[tokio::test]
 async fn initialize() {
     let (wallet, instance, _) = setup().await;

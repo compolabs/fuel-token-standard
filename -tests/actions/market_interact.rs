@@ -4,7 +4,7 @@ use std::str::FromStr;
 
 abigen!(Market, "tests/abi/market-abi.json");
 
-const USDT_ADDRESS: &str = "0x2cffcbc96717e5a102db1d5da45c189248d00a070cd65a822096b9733d3b071e";
+const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
 const MARKET_ADDRESS: &str = "0xabc9873302b555db02ad2e79a4afb6b1d2acbab1bf4fe08149aff8fc904a8e0c";
 
 #[tokio::test]

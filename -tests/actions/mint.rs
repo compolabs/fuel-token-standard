@@ -1,8 +1,8 @@
+use crate::{actions::setup::setup, utils::format_units};
 use fuels::prelude::*;
 use std::str::FromStr;
-use crate::{actions::setup::setup, utils::format_units};
 
-const USDT_ADDRESS: &str = "0x2cffcbc96717e5a102db1d5da45c189248d00a070cd65a822096b9733d3b071e";
+const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
 
 #[tokio::test]
 async fn mint() {

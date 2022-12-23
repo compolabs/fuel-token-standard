@@ -1,3 +1,3 @@
-// mod functions;
 mod utils;
-mod actions;
+mod local_tests;
+mod testnet_tests;

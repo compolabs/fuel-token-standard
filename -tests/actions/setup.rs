@@ -5,9 +5,9 @@ use std::str::FromStr;
 abigen!(UsdtContract, "out/debug/token_contract-abi.json");
 
 const RPC: &str = "node-beta-2.fuel.network";
-const USDT_ADDRESS: &str = "0x2cffcbc96717e5a102db1d5da45c189248d00a070cd65a822096b9733d3b071e";
+// const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
 
-pub async fn setup() -> (WalletUnlocked, UsdtContract, Provider) {
+pub async fn setup(address: &str) -> (WalletUnlocked, UsdtContract, Provider) {
     let provider = match Provider::connect(RPC).await {
         Ok(p) => p,
         Err(error) => panic!("❌ Problem creating provider: {:#?}", error),
@@ -22,7 +22,7 @@ pub async fn setup() -> (WalletUnlocked, UsdtContract, Provider) {
     let wallet =
         WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
 
-    let usdt_dapp_id = Bech32ContractId::from(ContractId::from_str(USDT_ADDRESS).unwrap());
+    let usdt_dapp_id = Bech32ContractId::from(ContractId::from_str(address).unwrap());
     let usdt_dapp_instance = UsdtContract::new(usdt_dapp_id, wallet.clone());
 
     println!("👛 Account address     @ {}", wallet.clone().address());

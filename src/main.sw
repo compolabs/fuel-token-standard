@@ -23,12 +23,9 @@ use std::{
 };
 
 abi Token {
-    // Config of token
-    #[storage(read)]
-    fn config() -> Config;
     // Initialize contract
     #[storage(read, write)]
-    fn initialize(config: Config, mint_amount: u64, address: Address);
+    fn initialize(config: TokenInitializeConfig, mint_amount: u64, address: Address);
     // Set mint amount for each address
     #[storage(read, write)]
     fn set_mint_amount(mint_amount: u64);
@@ -53,14 +50,18 @@ abi Token {
     fn transfer_token_to_output(coins: u64, asset_id: ContractId, address: Address);
     // Method called from address to mint coins
     #[storage(read, write)]
-    fn mint();
+    fn mint();    
+    // Config of token
+    #[storage(read)]
+    fn config() -> TokenInitializeConfig;
+    // Is user already minted test token
     #[storage(read)]
     fn already_minted(address: Address) -> bool;
 }
 
 const ZERO_B256 = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
-pub struct Config {
+pub struct TokenInitializeConfig {
     name: str[32],
     symbol: str[8],
     decimals: u8,
@@ -68,7 +69,7 @@ pub struct Config {
 
 
 storage {
-    config: Config = Config {
+    config: TokenInitializeConfig = TokenInitializeConfig {
         name: "                                ",
         symbol: "        ",
         decimals: 1u8,
@@ -107,7 +108,7 @@ impl Token for Contract {
     // Owner methods
     //////////////////////////////////////
     #[storage(read, write)]
-    fn initialize(config: Config, mint_amount: u64, owner: Address) {
+    fn initialize(config: TokenInitializeConfig, mint_amount: u64, owner: Address) {
         require(storage.owner.into() == ZERO_B256, Error::CannotReinitialize);
         storage.owner = owner;
         storage.mint_amount = mint_amount;
@@ -175,7 +176,7 @@ impl Token for Contract {
         balance_of(asset_id, contract_id())
     }
     #[storage(read)]
-    fn config() -> Config {
+    fn config() -> TokenInitializeConfig {
         storage.config
     }
 
