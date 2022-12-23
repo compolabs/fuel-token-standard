@@ -1,6 +1,6 @@
 use dotenv::dotenv;
 use fuels::prelude::*;
-use rand::prelude::{Rng, SeedableRng, StdRng};
+use rand::prelude::{Rng};
 
 use crate::utils::parse_units;
 abigen!(TokenContract, "out/debug/token_contract-abi.json");
