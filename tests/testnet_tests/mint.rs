@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::utils::{testnet_tests_utils::setup, number_utils::*};
 
-const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
+const USDT_ADDRESS: &str = "YOUR TOKEN ADDRESS";
 
 #[tokio::test]
 async fn mint() {

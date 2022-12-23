@@ -2,7 +2,7 @@ use fuels::prelude::*;
 
 use crate::utils::{number_utils::*, testnet_tests_utils::*};
 
-const ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
+const ADDRESS: &str = "YOUR TOKEN ADDRESS";
 
 #[tokio::test]
 async fn initialize() {

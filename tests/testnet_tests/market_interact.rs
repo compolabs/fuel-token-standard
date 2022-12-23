@@ -5,7 +5,7 @@ use crate::utils::{testnet_tests_utils::setup, number_utils::parse_units};
 
 abigen!(Market, "tests/artefacts/market/market-abi.json");
 
-const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
+const USDT_ADDRESS: &str = "YOUR TOKEN ADDRESS";
 const MARKET_ADDRESS: &str = "0xabc9873302b555db02ad2e79a4afb6b1d2acbab1bf4fe08149aff8fc904a8e0c";
 
 #[tokio::test]

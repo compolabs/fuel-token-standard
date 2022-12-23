@@ -3,16 +3,16 @@ use std::str::FromStr;
 
 use crate::utils::{number_utils::*, testnet_tests_utils::setup};
 
-const USDT_ADDRESS: &str = "0x777923117c7772c0680806d2a0d3a0eb5e654fa65e48d8de85516f6f85ba4887";
+const TOKEN_ADDRESS: &str = "YOUR TOKEN ADDRESS";
 const RECIPIEND_ADDRES: &str = "fuel1v3hdp7mpsy3mnsdy4jhwt4yk67n3yqgrn6mt0d4v3wvny2dn7f7sgf3ymm";
 
 #[tokio::test]
 async fn transfer() {
-    let (wallet, dapp, provider) = setup(USDT_ADDRESS).await;
+    let (wallet, dapp, provider) = setup(TOKEN_ADDRESS).await;
     let config = dapp.methods().config().simulate().await.unwrap().value;
     let decimals = config.decimals;
     let symbol = config.symbol;
-    let asset_id = AssetId::from_str(USDT_ADDRESS).unwrap();
+    let asset_id = AssetId::from_str(TOKEN_ADDRESS).unwrap();
 
     println!("Decimals: {decimals}\nSymbol: {symbol}");
 
