@@ -5,6 +5,7 @@ use rand::prelude::Rng;
 use crate::utils::number_utils::parse_units;
 
 abigen!(TokenContract, "out/debug/token_contract-abi.json");
+const RPC: &str = "node-beta-2.fuel.network";
 
 #[derive(Debug)]
 struct DeployConfig {
@@ -14,10 +15,9 @@ struct DeployConfig {
     mint_amount: u64,
 }
 
-const RPC: &str = "node-beta-2.fuel.network";
-
 #[tokio::test]
 async fn deploy() {
+    // YOUR TOKENS ARRAY HERE
     let configs: Vec<DeployConfig> = vec![
         DeployConfig {
             name: String::from("Tether"),

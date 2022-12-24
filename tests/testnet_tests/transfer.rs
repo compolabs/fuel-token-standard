@@ -4,7 +4,8 @@ use std::str::FromStr;
 use crate::utils::{number_utils::*, testnet_tests_utils::setup};
 
 const TOKEN_ADDRESS: &str = "YOUR TOKEN ADDRESS";
-const RECIPIEND_ADDRES: &str = "fuel1v3hdp7mpsy3mnsdy4jhwt4yk67n3yqgrn6mt0d4v3wvny2dn7f7sgf3ymm";
+const TRANSFER_AMOUNT: u64 = 10; //TRANSFER AMOUNT WITHOUT DECIMALS
+const RECIPIEND_ADDRES: &str = "RECIPIENT ADDRESS";
 
 #[tokio::test]
 async fn transfer() {
@@ -25,7 +26,7 @@ async fn transfer() {
     let recipient = Bech32Address::from_str(RECIPIEND_ADDRES).unwrap();
     let recipient = Wallet::from_address(recipient, Some(provider.clone()));
 
-    let amount = parse_units(10, decimals);
+    let amount = parse_units(TRANSFER_AMOUNT, decimals);
     let _receipts = wallet
         .transfer(
             recipient.address(),

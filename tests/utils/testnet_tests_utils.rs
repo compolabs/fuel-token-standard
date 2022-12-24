@@ -21,13 +21,13 @@ pub async fn setup(address: &str) -> (WalletUnlocked, TokenContract, Provider) {
     let wallet =
         WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
 
-    let usdt_dapp_id = Bech32ContractId::from(ContractId::from_str(address).unwrap());
-    let usdt_dapp_instance = TokenContract::new(usdt_dapp_id, wallet.clone());
+    let token_id = Bech32ContractId::from(ContractId::from_str(address).unwrap());
+    let instance = TokenContract::new(token_id, wallet.clone());
 
     println!("👛 Account address     @ {}", wallet.clone().address());
     println!(
-        "🗞  USDT dapp address   @ {}",
-        usdt_dapp_instance.get_contract_id()
+        "🗞  Token address   @ {}",
+        instance.get_contract_id()
     );
-    return (wallet, usdt_dapp_instance, provider);
+    return (wallet, instance, provider);
 }
