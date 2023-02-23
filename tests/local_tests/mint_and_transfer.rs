@@ -33,7 +33,7 @@ async fn mint_and_transfer() {
         "BBC",
         9,
         token_mint_amount,
-        Address::from(wallets.wallet_owner.address()),
+        Identity::Address(Address::from(wallets.wallet_owner.address())),
     )
     .await
     .unwrap();

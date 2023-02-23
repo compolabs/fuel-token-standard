@@ -1,0 +1,2 @@
+forc build
+cargo test

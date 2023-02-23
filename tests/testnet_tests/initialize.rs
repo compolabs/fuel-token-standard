@@ -24,7 +24,7 @@ async fn initialize() {
                 decimals: DECIMALS,
             },
             parse_units(1000, DECIMALS),
-            Address::from(wallet.address()),
+            Identity::Address(Address::from(wallet.address())),
         )
         .tx_params(TxParameters::new(Some(1), Some(1000000), None))
         .call()

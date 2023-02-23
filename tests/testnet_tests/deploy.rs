@@ -114,7 +114,11 @@ async fn deploy_token_contract(mut deploy_config: DeployConfig) {
         decimals: deploy_config.decimals,
     };
     let _res = methods
-        .initialize(config, mint_amount, Address::from(wallet.address()))
+        .initialize(
+            config,
+            mint_amount,
+            Identity::Address(Address::from(wallet.address())),
+        )
         .tx_params(TxParameters::new(Some(1), Some(1000000), None))
         .call()
         .await;
