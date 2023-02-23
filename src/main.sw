@@ -30,6 +30,9 @@ abi Token {
     // Set mint amount for each address
     #[storage(read, write)]
     fn set_mint_amount(mint_amount: u64);
+
+    #[storage(read)]
+    fn mint_to_id(amount: u64, address: Identity);
     // Get balance of the contract coins
     fn get_balance() -> u64;
     // Return the mint amount
@@ -106,6 +109,12 @@ impl Token for Contract {
         storage.config = config;
     }
 
+    #[storage(read)]
+    fn mint_to_id(amount: u64, address: Identity){
+        validate_owner();
+        mint_to(amount, address);
+    }
+
     #[storage(read, write)]
     fn set_mint_amount(mint_amount: u64) {
         validate_owner();
@@ -123,6 +132,8 @@ impl Token for Contract {
         validate_owner();
         burn(burn_amount);
     }
+
+    
 
     #[storage(read)]
     fn transfer_coins(coins: u64, address: Identity) {
