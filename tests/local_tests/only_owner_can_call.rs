@@ -1,4 +1,3 @@
-
 use fuels::prelude::*;
 
 use crate::utils::local_tests_utils::abi_calls::*;
@@ -29,7 +28,7 @@ async fn only_owner_can_call() {
         "BBC",
         9,
         token_mint_amount,
-        Address::from(wallets.wallet_owner.address()),
+        Identity::Address(Address::from(wallets.wallet_owner.address())),
     )
     .await
     .unwrap();
@@ -63,7 +62,7 @@ async fn only_owner_can_call() {
         &wallet1_token_instance,
         1,
         ContractId::from(*owner_token_istance.get_contract_id().hash()),
-        Address::from(wallets.wallet2.address()),
+        Identity::Address(Address::from(wallets.wallet2.address())),
     )
     .await
     .is_err();

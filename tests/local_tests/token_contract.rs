@@ -1,4 +1,7 @@
-use crate::utils::{local_tests_utils::{abi_calls::*, setup_utils::setup}, number_utils::*};
+use crate::utils::{
+    local_tests_utils::{abi_calls::*, setup_utils::setup},
+    number_utils::*,
+};
 use fuels::prelude::*;
 
 #[tokio::test]
@@ -30,7 +33,7 @@ async fn token_contract() {
         "BBC",
         9,
         token_mint_amount,
-        Address::from(wallets.wallet_owner.address()),
+        Identity::Address(Address::from(wallets.wallet_owner.address())),
     )
     .await
     .unwrap();
@@ -52,7 +55,7 @@ async fn token_contract() {
         "BBC",
         9,
         token_mint_amount,
-        Address::from(wallets.wallet_owner.address()),
+        Identity::Address(Address::from(wallets.wallet_owner.address())),
     )
     .await
     .is_err();
@@ -102,7 +105,7 @@ async fn token_contract() {
     );
 
     // Transfer tokens to the wallet
-    let address = Address::from(wallets.wallet_owner.address());
+    let address = Identity::Address(Address::from(wallets.wallet_owner.address()));
     transfer_coins(&owner_token_istance, wallet_token_amount, address.clone())
         .await
         .unwrap();

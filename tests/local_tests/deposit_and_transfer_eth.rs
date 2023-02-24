@@ -23,7 +23,7 @@ async fn deposit_and_transfer_eth() {
         "BBC",
         9,
         token_mint_amount,
-        Address::from(wallets.wallet_owner.address()),
+        Identity::Address(Address::from(wallets.wallet_owner.address())),
     )
     .await
     .unwrap();
@@ -79,7 +79,7 @@ async fn deposit_and_transfer_eth() {
         .transfer_token_to_output(
             send_native_token_amount,
             ContractId::from(*BASE_ASSET_ID),
-            Address::from(wallets.wallet_owner.address()),
+            Identity::Address(Address::from(wallets.wallet_owner.address())),
         )
         .append_variable_outputs(1)
         .call()

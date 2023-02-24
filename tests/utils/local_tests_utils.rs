@@ -19,7 +19,7 @@ pub mod abi_calls {
         symbol: &str,
         decimals: u8,
         mint_amount: u64,
-        address: Address,
+        address: Identity,
     ) -> Result<CallResponse<()>, Error> {
         let mut name = name.to_string();
         let mut symbol = symbol.to_string();
@@ -79,7 +79,7 @@ pub mod abi_calls {
         contract: &TestToken,
         coins: u64,
         asset_id: ContractId,
-        address: Address,
+        address: Identity,
     ) -> Result<CallResponse<()>, Error> {
         contract
             .methods()
@@ -91,7 +91,7 @@ pub mod abi_calls {
     pub async fn transfer_coins(
         contract: &TestToken,
         coins: u64,
-        address: Address,
+        address: Identity,
     ) -> Result<CallResponse<()>, Error> {
         contract
             .methods()

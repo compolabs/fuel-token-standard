@@ -14,6 +14,7 @@ use std::{
         AuthError,
         msg_sender,
     },
+    identity::{Identity},
     call_frames::{contract_id, msg_asset_id},
     context::{balance_of, msg_amount},
     contract_id::ContractId,
@@ -25,10 +26,13 @@ use std::{
 abi Token {
     // Initialize contract
     #[storage(read, write)]
-    fn initialize(config: TokenInitializeConfig, mint_amount: u64, address: Address);
+    fn initialize(config: TokenInitializeConfig, mint_amount: u64, address: Identity);
     // Set mint amount for each address
     #[storage(read, write)]
     fn set_mint_amount(mint_amount: u64);
+
+    #[storage(read)]
+    fn mint_to_id(amount: u64, address: Identity);
     // Get balance of the contract coins
     fn get_balance() -> u64;
     // Return the mint amount
@@ -44,10 +48,10 @@ abi Token {
     fn burn_coins(burn_amount: u64);
     // Transfer a contract coins to a given output
     #[storage(read)]
-    fn transfer_coins(coins: u64, address: Address);
+    fn transfer_coins(coins: u64, address: Identity);
     // Transfer a specified token from the contract to a given output
     #[storage(read)]
-    fn transfer_token_to_output(coins: u64, asset_id: ContractId, address: Address);
+    fn transfer_token_to_output(coins: u64, asset_id: ContractId, address: Identity);
     // Method called from address to mint coins
     #[storage(read, write)]
     fn mint();    
@@ -56,7 +60,7 @@ abi Token {
     fn config() -> TokenInitializeConfig;
     // Is user already minted test token
     #[storage(read)]
-    fn already_minted(address: Address) -> bool;
+    fn already_minted(address: Identity) -> bool;
 }
 
 const ZERO_B256 = 0x0000000000000000000000000000000000000000000000000000000000000000;
@@ -74,11 +78,9 @@ storage {
         symbol: "        ",
         decimals: 1u8,
     },
-    owner: Address = Address {
-        value: ZERO_B256,
-    },
+    owner: Identity = Identity::Address(Address::from(ZERO_B256)),
     mint_amount: u64 = 0,
-    mint_list: StorageMap<Address, bool> = StorageMap {},
+    mint_list: StorageMap<Identity, bool> = StorageMap {},
 }
 
 enum Error {
@@ -88,18 +90,10 @@ enum Error {
     NotOwner: (),
 }
 
-pub fn get_msg_sender_address_or_panic() -> Address {
-    let sender: Result<Identity, AuthError> = msg_sender();
-    if let Identity::Address(address) = sender.unwrap() {
-        address
-    } else {
-        revert(0);
-    }
-}
 
 #[storage(read)]
 fn validate_owner() {
-    let sender = get_msg_sender_address_or_panic();
+    let sender = msg_sender().unwrap(); 
     require(storage.owner == sender, Error::NotOwner);
 }
 
@@ -108,11 +102,17 @@ impl Token for Contract {
     // Owner methods
     //////////////////////////////////////
     #[storage(read, write)]
-    fn initialize(config: TokenInitializeConfig, mint_amount: u64, owner: Address) {
-        require(storage.owner.into() == ZERO_B256, Error::CannotReinitialize);
+    fn initialize(config: TokenInitializeConfig, mint_amount: u64, owner: Identity) {
+        require(storage.owner == Identity::Address(Address::from(ZERO_B256)), Error::CannotReinitialize);
         storage.owner = owner;
         storage.mint_amount = mint_amount;
         storage.config = config;
+    }
+
+    #[storage(read)]
+    fn mint_to_id(amount: u64, address: Identity){
+        validate_owner();
+        mint_to(amount, address);
     }
 
     #[storage(read, write)]
@@ -133,16 +133,18 @@ impl Token for Contract {
         burn(burn_amount);
     }
 
+    
+
     #[storage(read)]
-    fn transfer_coins(coins: u64, address: Address) {
+    fn transfer_coins(coins: u64, address: Identity) {
         validate_owner();
-        transfer_to_address(coins, contract_id(), address);
+        transfer(coins, contract_id(), address);
     }
 
     #[storage(read)]
-    fn transfer_token_to_output(coins: u64, asset_id: ContractId, address: Address) {
+    fn transfer_token_to_output(coins: u64, asset_id: ContractId, address: Identity) {
         validate_owner();
-        transfer_to_address(coins, asset_id, address);
+        transfer(coins, asset_id, address);
     }
 
     //////////////////////////////////////
@@ -153,11 +155,11 @@ impl Token for Contract {
         require(storage.mint_amount > 0, Error::MintIsClosed);
 
         // Enable a address to mint only once
-        let sender = get_msg_sender_address_or_panic();
+        let sender = msg_sender().unwrap();
         require(storage.mint_list.get(sender) == false, Error::AddressAlreadyMint);
 
         storage.mint_list.insert(sender, true);
-        mint_to_address(storage.mint_amount, sender);
+        mint_to(storage.mint_amount, sender);
     }
 
     //////////////////////////////////////
@@ -181,7 +183,7 @@ impl Token for Contract {
     }
 
     #[storage(read)]
-    fn already_minted(address: Address) -> bool{
+    fn already_minted(address: Identity) -> bool{
         storage.mint_list.get(address)
     }
 }
